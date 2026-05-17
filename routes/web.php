@@ -2,10 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntryController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('home');
 });
+
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [AuthController::class, 'showRegister']);
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
 
 Route::get('/entries', [EntryController::class, 'index']);
 
@@ -17,10 +24,4 @@ Route::middleware('auth')->group(function () {
     Route::put('/entries/{entry}', [EntryController::class, 'update']);
     Route::delete('/entries/{entry}', [EntryController::class, 'destroy']);
 
-});
-
-// ONLY FOR DEVELOPMENT - delete after lesson 10
-Route::get('/dev-login', function () {
-    auth()->loginUsingId(1);
-    return redirect('/entries');
 });
