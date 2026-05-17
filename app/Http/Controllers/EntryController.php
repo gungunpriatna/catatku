@@ -12,4 +12,13 @@ class EntryController extends Controller
         $entries = Entry::with('user')->latest()->get();
         return view('entries.index', compact('entries'));
     }
+
+    public function show(Entry $entry)
+    {
+        if ($entry->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('entries.show', compact('entry'));
+    }
 }
